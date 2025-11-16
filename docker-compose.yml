@@ -21,11 +21,14 @@ services:
         API_HOST: localhost
         API_PORT: 8080
         API_BASE: /sgu-api
+        API_PROTOCOL: https
     container_name: sgu-frontend
     ports:
-      - "3000:80"
+      - "3000:443"
     networks:
       - sgu-net
+    volumes:
+      - certbot-conf:/etc/letsencrypt:ro
     depends_on:
       - database
 
@@ -41,10 +44,15 @@ services:
       DB_NAME: sgu-database
       DB_USER: root
       DB_PASS: root
+      SERVER_SSL_ENABLE: true
+      SERVER_SSL_KEYSTORE: /etc/letsencrypt/live/localhost/keystore.p12
+      SERVER_SSL_KEYSTORE_PASS: changeit
     ports:
       - "8080:8080"
     networks:
       - sgu-net
+    volumes:
+      - certbot-conf:/etc/letsencrypt:ro
     depends_on:
       - frontend
 
@@ -56,4 +64,6 @@ networks:
 
 volumes:
   sgu-volume:
+    external: true
+  certbot-conf:
     external: true
