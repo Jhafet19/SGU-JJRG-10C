@@ -1,0 +1,4 @@
+docker network create --driver bridge sgu-net
+docker volume create sgu-volume
+docker compose up -d
+docker compose down
